@@ -1,1 +1,2 @@
-github "stephencelis/SQLite.swift" "0.11.3"
+github "Alamofire/Alamofire" "4.5.1"
+github "stephencelis/SQLite.swift" "0.11.4"

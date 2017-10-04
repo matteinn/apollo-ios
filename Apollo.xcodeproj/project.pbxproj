@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		54DDB0921EA045870009DD99 /* InMemoryNormalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54DDB0911EA045870009DD99 /* InMemoryNormalizedCache.swift */; };
+		9591A5BF1F859A7A00A98555 /* AlamofireNetworkTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9591A5BE1F859A7A00A98555 /* AlamofireNetworkTransport.swift */; };
+		9591A5C11F859BD900A98555 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9591A5C01F859BB300A98555 /* Alamofire.framework */; };
 		9F0CA4451EE7F9E90032DD39 /* ApolloTestSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F8A95781EC0FC1200304A2D /* ApolloTestSupport.framework */; };
 		9F0CA4461EE7F9E90032DD39 /* ApolloTestSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9F8A95781EC0FC1200304A2D /* ApolloTestSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9F10A51E1EC1BA0F0045E62B /* MockNetworkTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F10A51D1EC1BA0F0045E62B /* MockNetworkTransport.swift */; };
@@ -218,6 +220,8 @@
 
 /* Begin PBXFileReference section */
 		54DDB0911EA045870009DD99 /* InMemoryNormalizedCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryNormalizedCache.swift; sourceTree = "<group>"; };
+		9591A5BE1F859A7A00A98555 /* AlamofireNetworkTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireNetworkTransport.swift; sourceTree = "<group>"; };
+		9591A5C01F859BB300A98555 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		9F10A51D1EC1BA0F0045E62B /* MockNetworkTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockNetworkTransport.swift; sourceTree = "<group>"; };
 		9F19D8431EED568200C57247 /* ResultOrPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultOrPromise.swift; sourceTree = "<group>"; };
 		9F19D8451EED8D3B00C57247 /* ResultOrPromiseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultOrPromiseTests.swift; sourceTree = "<group>"; };
@@ -349,6 +353,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9591A5C11F859BD900A98555 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,6 +442,7 @@
 		9FB9D1531EC102CB0086EEB5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9591A5C01F859BB300A98555 /* Alamofire.framework */,
 				9FB9D1541EC102CB0086EEB5 /* XCTest.framework */,
 			);
 			name = Frameworks;
@@ -543,6 +549,7 @@
 				9F69FFA81D42855900E000B1 /* NetworkTransport.swift */,
 				9F4DAF2D1E48B84B00EBFF0B /* HTTPNetworkTransport.swift */,
 				9FF90A5B1DDDEB100034C3B6 /* GraphQLResponse.swift */,
+				9591A5BE1F859A7A00A98555 /* AlamofireNetworkTransport.swift */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -1006,6 +1013,7 @@
 				9FF90A611DDDEB100034C3B6 /* GraphQLResponse.swift in Sources */,
 				9F27D4641D40379500715680 /* JSONStandardTypeConversions.swift in Sources */,
 				9FA6F3681E65DF4700BF8D73 /* GraphQLResultAccumulator.swift in Sources */,
+				9591A5BF1F859A7A00A98555 /* AlamofireNetworkTransport.swift in Sources */,
 				9FF90A651DDDEB100034C3B6 /* GraphQLExecutor.swift in Sources */,
 				9FC750611D2A59C300458D91 /* GraphQLOperation.swift in Sources */,
 				9FE941D01E62C771007CDD89 /* Promise.swift in Sources */,
@@ -1434,6 +1442,10 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Sources/Apollo/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.apollographql.Apollo;
 				PRODUCT_NAME = Apollo;
@@ -1448,6 +1460,10 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Sources/Apollo/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.apollographql.Apollo;
 				PRODUCT_NAME = Apollo;
@@ -1590,6 +1606,10 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Sources/Apollo/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.apollographql.Apollo;
 				PRODUCT_NAME = Apollo;
