@@ -60,21 +60,23 @@ public class AlamofireNetworkTransport: NetworkTransport {
                     fatalError("Response should be an HTTPURLResponse")
                 }
                 
-                switch dataResponse.result {
-                case .success(let value):
-                    
-                    do {
-                        guard let body =  try self.serializationFormat.deserialize(data: value) as? JSONObject else {
-                            throw GraphQLHTTPResponseError(body: value, response: httpResponse, kind: .invalidResponse)
+                DispatchQueue.global(qos: .default).async {
+                    switch dataResponse.result {
+                    case .success(let value):
+                        
+                        do {
+                            guard let body =  try self.serializationFormat.deserialize(data: value) as? JSONObject else {
+                                throw GraphQLHTTPResponseError(body: value, response: httpResponse, kind: .invalidResponse)
+                            }
+                            let response = GraphQLResponse(operation: operation, body: body)
+                            completionHandler(response, nil)
+                        } catch {
+                            completionHandler(nil, error)
                         }
-                        let response = GraphQLResponse(operation: operation, body: body)
-                        completionHandler(response, nil)
-                    } catch {
-                        completionHandler(nil, error)
+                        
+                    case .failure(_):
+                        completionHandler(nil, GraphQLHTTPResponseError(body: dataResponse.data, response: httpResponse, kind: .errorResponse))
                     }
-                    
-                case .failure(_):
-                    completionHandler(nil, GraphQLHTTPResponseError(body: dataResponse.data, response: httpResponse, kind: .errorResponse))
                 }
             })
     }
