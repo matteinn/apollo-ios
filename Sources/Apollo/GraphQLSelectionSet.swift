@@ -1,11 +1,10 @@
-public typealias Snapshot = [String: Any?]
+public typealias ResultMap = [String: Any?]
 
 public protocol GraphQLSelectionSet {
   static var selections: [GraphQLSelection] { get }
-  static var possibleTypes: [String] { get }
   
-  var snapshot: Snapshot { get }
-  init(snapshot: Snapshot)
+  var resultMap: ResultMap { get }
+  init(unsafeResultMap: ResultMap)
 }
 
 public extension GraphQLSelectionSet {
@@ -18,11 +17,11 @@ public extension GraphQLSelectionSet {
   }
   
   var jsonObject: JSONObject {
-    return snapshot.jsonObject
+    return resultMap.jsonObject
   }
 }
 
-extension GraphQLSelectionSet {  
+extension GraphQLSelectionSet {
   public init(_ selectionSet: GraphQLSelectionSet) throws {
     try self.init(jsonObject: selectionSet.jsonObject)
   }
@@ -61,6 +60,22 @@ public struct GraphQLField: GraphQLSelection {
   }
 }
 
+public indirect enum GraphQLOutputType {
+  case scalar(JSONDecodable.Type)
+  case object([GraphQLSelection])
+  case nonNull(GraphQLOutputType)
+  case list(GraphQLOutputType)
+  
+  var namedType: GraphQLOutputType {
+    switch self {
+    case .nonNull(let innerType), .list(let innerType):
+      return innerType.namedType
+    case .scalar, .object:
+      return self
+    }
+  }
+}
+
 private func orderIndependentKey(for object: JSONObject) -> String {
   return object.sorted { $0.key < $1.key }.map {
     if let object = $0.value as? JSONObject {
@@ -71,6 +86,28 @@ private func orderIndependentKey(for object: JSONObject) -> String {
   }.joined(separator: ",")
 }
 
+public struct GraphQLBooleanCondition: GraphQLSelection {
+  let variableName: String
+  let inverted: Bool
+  let selections: [GraphQLSelection]
+  
+  public init(variableName: String, inverted: Bool, selections: [GraphQLSelection]) {
+    self.variableName = variableName
+    self.inverted = inverted;
+    self.selections = selections;
+  }
+}
+
+public struct GraphQLTypeCondition: GraphQLSelection {
+  let possibleTypes: [String]
+  let selections: [GraphQLSelection]
+  
+  public init(possibleTypes: [String], selections: [GraphQLSelection]) {
+    self.possibleTypes = possibleTypes
+    self.selections = selections;
+  }
+}
+
 public struct GraphQLFragmentSpread: GraphQLSelection {
   let fragment: GraphQLFragment.Type
   
@@ -78,3 +115,14 @@ public struct GraphQLFragmentSpread: GraphQLSelection {
     self.fragment = fragment
   }
 }
+
+public struct GraphQLTypeCase: GraphQLSelection {
+  let variants: [String: [GraphQLSelection]]
+  let `default`: [GraphQLSelection]
+  
+  public init(variants: [String: [GraphQLSelection]], default: [GraphQLSelection]) {
+    self.variants = variants
+    self.default = `default`;
+  }
+}
+

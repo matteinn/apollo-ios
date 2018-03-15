@@ -5,12 +5,11 @@ import StarWarsAPI
 
 private struct MockSelectionSet: GraphQLSelectionSet {
   public static let selections: [GraphQLSelection] = []
-  static var possibleTypes = ["Mock"]
   
-  public var snapshot: Snapshot
+  public var resultMap: ResultMap
   
-  public init(snapshot: Snapshot) {
-    self.snapshot = snapshot
+  public init(unsafeResultMap: ResultMap) {
+    self.resultMap = unsafeResultMap
   }
 }
 
@@ -19,7 +18,7 @@ func readFieldValue(_ field: GraphQLField, from object: JSONObject) throws -> An
     return .result(.success(object[info.responseKeyForField]))
   }
   
-  return try executor.execute(selections: [field], on: object, withKey: "", variables: [:], accumulator: GraphQLSelectionSetMapper<MockSelectionSet>()).await().snapshot[field.responseKey]!
+  return try executor.execute(selections: [field], on: object, withKey: "", variables: [:], accumulator: GraphQLSelectionSetMapper<MockSelectionSet>()).await().resultMap[field.responseKey]!
 }
 
 class ReadFieldValueTests: XCTestCase {
@@ -259,15 +258,9 @@ class ReadFieldValueTests: XCTestCase {
   func testGetOptionalScalarListWithUnknownEnumCase() throws {
     let object: JSONObject = ["appearsIn": ["TWOTOWERS"]]
     let field = GraphQLField("appearsIn", type: .list(.scalar(Episode.self)))
-    
-    XCTAssertThrowsError(try readFieldValue(field, from: object)) { (error) in
-      if let error = error as? GraphQLResultError, case JSONDecodingError.couldNotConvert(let value, let expectedType) = error.underlying {
-        XCTAssertEqual(error.path, ["appearsIn"])
-        XCTAssertEqual(value as? String, "TWOTOWERS")
-        XCTAssertTrue(expectedType == Episode.self)
-      } else {
-        XCTFail("Unexpected error: \(error)")
-      }
-    }
+
+    let value = try readFieldValue(field, from: object) as! [Episode?]?
+
+    XCTAssertEqual(value, [.__unknown("TWOTOWERS")] as [Episode?]?)
   }
 }

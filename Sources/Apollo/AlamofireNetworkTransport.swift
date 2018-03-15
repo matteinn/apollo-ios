@@ -38,7 +38,7 @@ public class AlamofireNetworkTransport: NetworkTransport {
     ///   - response: The response received from the server, or `nil` if an error occurred.
     ///   - error: An error that indicates why a request failed, or `nil` if the request was succesful.
     /// - Returns: An object that can be used to cancel an in progress request.
-    public func send<Operation: GraphQLOperation>(operation: Operation, completionHandler: @escaping (GraphQLResponse<Operation>?, Error?) -> Void) -> Cancellable {
+    public func send<Operation>(operation: Operation, completionHandler: @escaping (_ response: GraphQLResponse<Operation>?, _ error: Error?) -> Void) -> Cancellable {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -85,12 +85,12 @@ public class AlamofireNetworkTransport: NetworkTransport {
     
     private func requestBody<Operation: GraphQLOperation>(for operation: Operation) -> GraphQLMap {
         if sendOperationIdentifiers {
-            guard let operationIdentifier = type(of: operation).operationIdentifier else {
+            guard let operationIdentifier = operation.operationIdentifier else {
                 preconditionFailure("To send operation identifiers, Apollo types must be generated with operationIdentifiers")
             }
             return ["id": operationIdentifier, "variables": operation.variables]
         }
-        return ["query": type(of: operation).requestString, "variables": operation.variables]
+        return ["query": operation.queryDocument, "variables": operation.variables]
     }
 }
 
